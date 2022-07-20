@@ -2,7 +2,15 @@
 
 [Packer](https://learn.hashicorp.com/packer) is an open source tool that enables you to create identical machine images for multiple platforms from a single source template.
 
-## How To Build Packer
+## What Template This Repository Have
+
+* Examples
+  * `aws-ubuntu.pkr.hcl`: An Example from Packer official website, to test whether your packer work or not
+* aws
+  * ami
+    * dolphinscheduler: AWS AMI builder for [Apache DolphinScheduler](https://github.com/apache/dolphinscheduler), you can see [dolphinscheduler AWS AMI builder](./aws/ami/dolphinscheduler/README.md) for more detail
+
+## How To Build With Packer
 
 ### Install Packer
 
@@ -33,5 +41,5 @@ For more detail you can see [Build an Image](https://learn.hashicorp.com/tutoria
 It means your AMI with name *'<NAME-OF-YOUR-AMI>'* already exists in your [AMIs](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Images:visibility=owned-by-me)
 (some time you have your region to find the exists AMIs). In this case you should:
 
-* Remove exists AMIs: remove exists AMI with name *'<NAME-OF-YOUR-AMI>'*
-* Rename your `ami_name` attribute in your `*.pkr.hcl`: rename the attribute in your `*.pkr.hcl` file to not exists name
+* Remove exists AMIs: remove exists AMI with name *'<NAME-OF-YOUR-AMI>'*, ref to [deregister-ami](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/deregister-ami.html) if you want to see more detail.
+* Rename your `ami_name` attribute in your `*.pkr.hcl`: rename the attribute in your `*.pkr.hcl` file to not exists name.

@@ -12,14 +12,30 @@ variable "dolphinscheduler_version" {
   default = "3.0.0-beta-2"
 }
 
+variable "debug" {
+  type    = string
+  default = "false"
+}
+
+variable "region" {
+  type    = string
+  default = "ap-southeast-1"
+}
+
+# t2.micro it is the 
+variable "instance_type" {
+  type    = string
+  default = "t2.micro"
+}
+
 locals {
   ami_name = "Apache-DolphinScheduler"
 }
 
 source "amazon-ebs" "dolphinscheduler" {
-  ami_name      = "${local.ami_name}-${var.dolphinscheduler_version}-1"
-  instance_type = "t2.micro"
-  region        = "us-west-2"
+  ami_name      = "${local.ami_name}-V${var.dolphinscheduler_version}"
+  instance_type = "${var.instance_type}"
+  region        = "${var.region}"
   source_ami_filter {
     filters = {
       name                = "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*"
@@ -41,6 +57,11 @@ build {
   provisioner "file" {
     source      = "systemd/zookeeper.service"
     destination = "/tmp/zookeeper.service"
+  }
+
+  provisioner "file" {
+    source      = "systemd/dolphinscheduler-standalone.service"
+    destination = "/tmp/dolphinscheduler-standalone.service"
   }
 
   provisioner "file" {
@@ -66,6 +87,7 @@ build {
   provisioner "shell" {
     environment_vars = [
       "DOLPHINSCHEDULER_VERSION=${var.dolphinscheduler_version}",
+      "DEBUG=${var.debug}",
     ]
     script = "scripts/dolphinscheduler_builder.sh"
   }

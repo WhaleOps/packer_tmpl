@@ -1,0 +1,14 @@
+[Unit]
+Description=dolphinscheduler api
+After=syslog.target network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/dolphinscheduler/api-server
+ExecStart=/bin/bash bin/start.sh
+ExecStop=/bin/kill -15 $MAINPID
+Restart = always
+RestartSec = 20
+
+[Install]
+WantedBy=multi-user.target

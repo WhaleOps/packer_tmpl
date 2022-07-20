@@ -11,6 +11,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  dead-link:
+    name: Dead Link
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Checker
+        run: sudo npm install -g markdown-link-check@3.10.0
+      - name: Check
+      - run: |
+          for file in $(find . -name "*.md"); do
+            markdown-link-check -q "$file"
+          done
   hcl:
     name: Packer hcl
     timeout-minutes: 15
