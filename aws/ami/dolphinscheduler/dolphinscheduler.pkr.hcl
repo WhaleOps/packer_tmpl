@@ -22,7 +22,7 @@ variable "region" {
   default = "ap-southeast-1"
 }
 
-# t2.micro it is the 
+# t2.micro it is under the AWS free-tier
 variable "instance_type" {
   type    = string
   default = "t2.micro"

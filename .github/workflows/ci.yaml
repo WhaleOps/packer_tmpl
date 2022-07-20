@@ -20,7 +20,7 @@ jobs:
       - name: Install Checker
         run: sudo npm install -g markdown-link-check@3.10.0
       - name: Check
-      - run: |
+        run: |
           for file in $(find . -name "*.md"); do
             markdown-link-check -q "$file"
           done
