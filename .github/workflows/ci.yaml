@@ -22,10 +22,14 @@ jobs:
           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
           sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
           sudo apt-get update && sudo apt-get install packer
+      # Need to `cd` to directory and and execute command, because some of templates with shell provisioner with script, which using related path
       - name: Format and Validate pkr.hcl File
         run: |
-          packer init .
           for file in $(find . -name "*.pkr.hcl"); do
-            packer fmt --check "${file}"
-            packer validate "${file}"
+            path_dir=$(dirname "${file}")
+            cd "${path_dir}"
+            packer init .
+            packer fmt --check $(basename "${file}")
+            packer validate $(basename "${file}")
+            cd -
           done
