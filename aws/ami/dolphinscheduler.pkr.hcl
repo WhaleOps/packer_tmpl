@@ -14,11 +14,10 @@ variable "dolphinscheduler_version" {
 
 locals {
   ami_name = "Apache-DolphinScheduler"
-  system = ""
 }
 
 source "amazon-ebs" "dolphinscheduler" {
-  ami_name      = "${local.ami_name}-${var.dolphinscheduler_version}"
+  ami_name      = "${local.ami_name}-${var.dolphinscheduler_version}-1"
   instance_type = "t2.micro"
   region        = "us-west-2"
   source_ami_filter {
@@ -30,50 +29,45 @@ source "amazon-ebs" "dolphinscheduler" {
     most_recent = true
     owners      = ["099720109477"]
   }
-  ssh_username = "dolphinscheduler"
+  ssh_username = "ubuntu"
 }
 
 build {
-  name    = "build-dolphinscheduler"
+  name = "build-dolphinscheduler"
   sources = [
     "source.amazon-ebs.dolphinscheduler"
   ]
 
   provisioner "file" {
-    source = "scripts/dolphinscheduler_builder.sh"
-    destination = "/tmp/dolphinscheduler_builder.sh"
-  }
-
-  provisioner "file" {
-    source = "systemd/zookeeper.service"
+    source      = "systemd/zookeeper.service"
     destination = "/tmp/zookeeper.service"
   }
 
   provisioner "file" {
-    source = "systemd/dolphinscheduler-alter.service"
+    source      = "systemd/dolphinscheduler-alter.service"
     destination = "/tmp/dolphinscheduler-alter.service"
   }
 
   provisioner "file" {
-    source = "systemd/dolphinscheduler-api.service"
+    source      = "systemd/dolphinscheduler-api.service"
     destination = "/tmp/dolphinscheduler-api.service"
   }
 
   provisioner "file" {
-    source = "systemd/dolphinscheduler-master.service"
+    source      = "systemd/dolphinscheduler-master.service"
     destination = "/tmp/dolphinscheduler-master.service"
   }
 
   provisioner "file" {
-    source = "systemd/dolphinscheduler-worker.service"
+    source      = "systemd/dolphinscheduler-worker.service"
     destination = "/tmp/dolphinscheduler-worker.service"
   }
 
   provisioner "shell" {
     environment_vars = [
-      "DOLPHINSCHEDULER_VERSION=${dolphinscheduler_version}",
+      "DOLPHINSCHEDULER_VERSION=${var.dolphinscheduler_version}",
     ]
-    script = "/tmp/dolphinscheduler_builder.sh"
+    script = "scripts/dolphinscheduler_builder.sh"
   }
 }
 
