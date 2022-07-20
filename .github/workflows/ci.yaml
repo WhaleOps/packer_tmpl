@@ -25,6 +25,7 @@ jobs:
       - name: Format and Validate pkr.hcl File
         run: |
           for file in $(find . -name "*.pkr.hcl"); do
+            packer init .
             packer fmt --check "${file}"
             packer validate "${file}"
           done
