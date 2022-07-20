@@ -1,20 +1,24 @@
-#!/bin/env bash
+#!/bin/bash
+
+# TODO variable from packer not work here
+if [[ "${DEBUG}" == "true" ]]; then
+    set -euxo pipefail
+fi
 
 unset HISTFILE
 history -cw
 
-echo "=== Waiting for Cloud-Init ==="
-timeout 180 /bin/bash -c 'until stat /var/lib/cloud/instance/boot-finished &>/dev/null; do echo waiting...; sleep 6; done'
-
 echo "=== Export Setting ==="
 export ZOOKEEPER_VERSION=${ZOOKEEPER_VERSION:-3.6.3}
 export ZOOKEEPER_HOME="/srv/zookeeper"
-export DOLPHINSCHEDULER_VERSION="${DOLPHINSCHEDULER_VERSION:-3.0.0-beta-2}
+export DOLPHINSCHEDULER_VERSION="${DOLPHINSCHEDULER_VERSION:-3.0.0-beta-2}"
 export DOLPHINSCHEDULER_HOME="/srv/dolphinscheduler"
 export TMP_DIST_HOME="/srv/dist"
 
 echo "=== Prepare ==="
-echo "dolphinscheduler" | passwd --stdin dolphinscheduler
+# TODO do not know how to change to default user currently
+# sudo useradd dolphinscheduler
+# echo "dolphinscheduler" | passwd --stdin dolphinscheduler
 sudo sed -i '$adolphinscheduler  ALL=(ALL)  NOPASSWD: NOPASSWD: ALL' /etc/sudoers
 sudo sed -i 's/Defaults    requirett/#Defaults    requirett/g' /etc/sudoers
 
@@ -24,10 +28,10 @@ wget -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add 
 sudo mkdir -p "${DOLPHINSCHEDULER_HOME}"
 sudo mkdir -p "${ZOOKEEPER_HOME}"
 sudo mkdir -p "${TMP_DIST_HOME}"
+sudo chown -R ubuntu:ubuntu "${DOLPHINSCHEDULER_HOME}" "${ZOOKEEPER_HOME}" "${TMP_DIST_HOME}"
 
 wget --directory-prefix=${TMP_DIST_HOME} https://dlcdn.apache.org/zookeeper/zookeeper-"${ZOOKEEPER_VERSION}"/apache-zookeeper-"${ZOOKEEPER_VERSION}"-bin.tar.gz 
-wget --directory-prefix=${TMP_DIST_HOME} https://www.apache.org/dyn/closer.lua/dolphinscheduler/"${DOLPHINSCHEDULER_VERSION}"/apache-dolphinscheduler-"${DOLPHINSCHEDULER_VERSION}"-bin.tar.gz
-
+wget --directory-prefix=${TMP_DIST_HOME} https://dlcdn.apache.org/dolphinscheduler/"${DOLPHINSCHEDULER_VERSION}"/apache-dolphinscheduler-"${DOLPHINSCHEDULER_VERSION}"-bin.tar.gz
 
 echo "=== Install Dependence ==="
 sudo apt-get -qq update
@@ -46,20 +50,25 @@ sudo apt-get clean
 echo "=== Services ==="
 sudo mkdir -p "${ZOOKEEPER_HOME}"/data
 sudo cp "${ZOOKEEPER_HOME}"/conf/zoo_sample.cfg "${ZOOKEEPER_HOME}"/conf/zoo.cfg
-sudo sed -i -r -e '/^dataDir/s/=.*/=\\/srv\\/zookeeper\\/data' /srv/zookeeper/conf/zoo.cfg
+
+# TODO /s not work here
+# sudo sed -i -r -e '/^dataDir/s/=.*/=\\/srv\\/zookeeper\\/data' /srv/zookeeper/conf/zoo.cfg
 
 echo "=== Poster ==="
+sudo chown -R ubuntu:ubuntu "${DOLPHINSCHEDULER_HOME}" "${ZOOKEEPER_HOME}" "${TMP_DIST_HOME}"
 sudo cp /tmp/zookeeper.service /lib/systemd/system/
+sudo cp /tmp/dolphinscheduler-standalone.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-alter.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-api.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-master.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-worker.service /lib/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable zookeeper.service
-sudo systemctl enable dolphinscheduler-alter.service
-sudo systemctl enable dolphinscheduler-api.service
-sudo systemctl enable dolphinscheduler-master.service
-sudo systemctl enable dolphinscheduler-worker.service
+sudo systemctl disable zookeeper.service
+sudo systemctl disable dolphinscheduler-alter.service
+sudo systemctl disable dolphinscheduler-api.service
+sudo systemctl disable dolphinscheduler-master.service
+sudo systemctl disable dolphinscheduler-worker.service
+sudo systemctl enable dolphinscheduler-standalone.service
 
 echo "=== System Cleanup ==="
 sudo rm -f /root/.bash_history
