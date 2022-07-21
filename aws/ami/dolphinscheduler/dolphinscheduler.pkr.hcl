@@ -12,6 +12,7 @@ variable "dolphinscheduler_version" {
   default = "3.0.0-beta-2"
 }
 
+# Flag about whether print debug log during the building process
 variable "debug" {
   type    = string
   default = "false"

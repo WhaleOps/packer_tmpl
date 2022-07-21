@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# TODO variable from packer not work here
 if [[ "${DEBUG}" == "true" ]]; then
     set -euxo pipefail
 fi
@@ -47,28 +46,32 @@ sudo apt-get -y -qq --purge autoremove
 sudo apt-get autoclean
 sudo apt-get clean
 
-echo "=== Services ==="
+echo "=== Services Prepare ==="
 sudo mkdir -p "${ZOOKEEPER_HOME}"/data
 sudo cp "${ZOOKEEPER_HOME}"/conf/zoo_sample.cfg "${ZOOKEEPER_HOME}"/conf/zoo.cfg
-
-# TODO /s not work here
-# sudo sed -i -r -e '/^dataDir/s/=.*/=\\/srv\\/zookeeper\\/data' /srv/zookeeper/conf/zoo.cfg
-
-echo "=== Poster ==="
 sudo chown -R ubuntu:ubuntu "${DOLPHINSCHEDULER_HOME}" "${ZOOKEEPER_HOME}" "${TMP_DIST_HOME}"
+
 sudo cp /tmp/zookeeper.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-standalone.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-alter.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-api.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-master.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-worker.service /lib/systemd/system/
+
+# make system cost less of memory
+sudo sed -i -E 's/(max-cpu-load-avg:) (.*?)/\1 1000/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
+sudo sed -i -E 's/(reserved-memory:) (.*?)/\1 0.001/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
+sudo sed -i -E 's/(exec-threads:) (.*?)/\1 5/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
+
+# Only need to auto restart the standalone server. In cluster deployment we will enable those service to start the cluster we also diable postgresql here,
 sudo systemctl daemon-reload
-sudo systemctl disable zookeeper.service
-sudo systemctl disable dolphinscheduler-alter.service
-sudo systemctl disable dolphinscheduler-api.service
-sudo systemctl disable dolphinscheduler-master.service
-sudo systemctl disable dolphinscheduler-worker.service
-sudo systemctl enable dolphinscheduler-standalone.service
+sudo systemctl disable zookeeper
+sudo systemctl disable postgresql
+sudo systemctl disable dolphinscheduler-alter
+sudo systemctl disable dolphinscheduler-api
+sudo systemctl disable dolphinscheduler-master
+sudo systemctl disable dolphinscheduler-worker
+sudo systemctl enable dolphinscheduler-standalone
 
 echo "=== System Cleanup ==="
 sudo rm -f /root/.bash_history
