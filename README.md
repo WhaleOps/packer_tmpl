@@ -36,10 +36,10 @@ For more detail you can see [Build an Image](https://learn.hashicorp.com/tutoria
 
 ### AWS AMI
 
-#### Error: AMI Name: '<NAME-OF-YOUR-AMI>' is used by an existing AMI: '<ID-OF-YOUR-AMI>'
+#### Error: AMI Name: '[NAME-OF-YOUR-AMI]' is used by an existing AMI: '[ID-OF-YOUR-AMI]'
 
-It means your AMI with name *'<NAME-OF-YOUR-AMI>'* already exists in your [AMIs](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Images:visibility=owned-by-me)
+It means your AMI with name *'[NAME-OF-YOUR-AMI]'* already exists in your [AMIs](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Images:visibility=owned-by-me)
 (some time you have your region to find the exists AMIs). In this case you should:
 
-* Remove exists AMIs: remove exists AMI with name *'<NAME-OF-YOUR-AMI>'*, ref to [deregister-ami](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/deregister-ami.html) if you want to see more detail.
+* Remove exists AMIs: remove exists AMI with name *'[NAME-OF-YOUR-AMI]'*, ref to [deregister-ami](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/deregister-ami.html) if you want to see more detail.
 * Rename your `ami_name` attribute in your `*.pkr.hcl`: rename the attribute in your `*.pkr.hcl` file to not exists name.
