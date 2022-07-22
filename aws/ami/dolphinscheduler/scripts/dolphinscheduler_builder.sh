@@ -47,22 +47,47 @@ sudo apt-get autoclean
 sudo apt-get clean
 
 echo "=== Services Prepare ==="
+# Add swap mount point, default memory is 4G
+sudo dd if=/dev/zero of=/swapfile bs=128M count=32
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sed -i -e '$a/swapfile swap swap defaults 0 0' /etc/fstab
+
+# Replace zookeeper data directory
 sudo mkdir -p "${ZOOKEEPER_HOME}"/data
 sudo cp "${ZOOKEEPER_HOME}"/conf/zoo_sample.cfg "${ZOOKEEPER_HOME}"/conf/zoo.cfg
+sudo sed -ir "s|dataDir=.*|dataDir=${ZOOKEEPER_HOME}/data|g" "${ZOOKEEPER_HOME}"/conf/zoo.cfg
 sudo chown -R ubuntu:ubuntu "${DOLPHINSCHEDULER_HOME}" "${ZOOKEEPER_HOME}" "${TMP_DIST_HOME}"
 
+# Add postgre database, user/password
+sudo -u postgres psql -c "CREATE DATABASE dolphinscheduler;"
+sudo -u postgres psql -c "CREATE USER dolphinscheduler WITH PASSWORD 'dolphinscheduler';"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE dolphinscheduler TO dolphinscheduler;"
+# Init dolphinscheduler metadata
+export DATABASE=postgresql
+export SPRING_PROFILES_ACTIVE=${DATABASE}
+export SPRING_DATASOURCE_URL="jdbc:postgresql://127.0.0.1:5432/dolphinscheduler"
+export SPRING_DATASOURCE_USERNAME="dolphinscheduler"
+export SPRING_DATASOURCE_PASSWORD="dolphinscheduler"
+bash "${DOLPHINSCHEDULER_HOME}/tools/bin/upgrade-schema.sh"
+# Export postgresql can be connect from remote host, SHOULD change
+sudo sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /etc/postgresql/*/main/postgresql.conf
+sudo sed -i '1s|^|host  all  all  0.0.0.0/0  md5\n|' /etc/postgresql/*/main/pg_hba.conf
+
+# TODO using env variable
+# make system cost less of memory
+sudo sed -iE 's/(max-cpu-load-avg:) (.*?)/\1 1000/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
+sudo sed -iE 's/(reserved-memory:) (.*?)/\1 0.001/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
+sudo sed -iE 's/(exec-threads:) (.*?)/\1 5/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
+
+# Add systemd services
 sudo cp /tmp/zookeeper.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-standalone.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-alter.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-api.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-master.service /lib/systemd/system/
 sudo cp /tmp/dolphinscheduler-worker.service /lib/systemd/system/
-
-# make system cost less of memory
-sudo sed -i -E 's/(max-cpu-load-avg:) (.*?)/\1 1000/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
-sudo sed -i -E 's/(reserved-memory:) (.*?)/\1 0.001/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
-sudo sed -i -E 's/(exec-threads:) (.*?)/\1 5/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
-
 # Only need to auto restart the standalone server. In cluster deployment we will enable those service to start the cluster we also diable postgresql here,
 sudo systemctl daemon-reload
 sudo systemctl disable zookeeper

@@ -1,1 +1,4 @@
 .DS_Store
+
+# DolphinScheduler temp env files
+runner/
