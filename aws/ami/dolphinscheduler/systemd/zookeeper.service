@@ -6,7 +6,7 @@ Wants=network-online.target
 [Service]
 Type=forking
 WorkingDirectory=/srv/zookeeper
-ExecStart=bin/zkServer.sh start conf/zoo.cfg
+ExecStart=/srv/zookeeper/bin/zkServer.sh start conf/zoo.cfg
 ExecStop=/bin/kill -15 $MAINPID
 Restart = always
 RestartSec = 20
