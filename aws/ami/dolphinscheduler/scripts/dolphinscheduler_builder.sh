@@ -47,12 +47,12 @@ sudo apt-get autoclean
 sudo apt-get clean
 
 echo "=== Services Prepare ==="
-# Add swap mount point, default memory is 4G
-sudo dd if=/dev/zero of=/swapfile bs=128M count=32
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-sed -i -e '$a/swapfile swap swap defaults 0 0' /etc/fstab
+# TODO Swap not support in ubuntu 22.04, Add swap mount point, default memory is 4G
+# sudo dd if=/dev/zero of=/swapfile bs=128M count=32
+# sudo chmod 600 /swapfile
+# sudo mkswap /swapfile
+# sudo swapon /swapfile
+# sed -i -e '$a/swapfile swap swap defaults 0 0' /etc/fstab
 
 # Replace zookeeper data directory
 sudo mkdir -p "${ZOOKEEPER_HOME}"/data
@@ -99,6 +99,8 @@ sudo systemctl disable dolphinscheduler-worker
 sudo systemctl enable dolphinscheduler-standalone
 
 echo "=== System Cleanup ==="
+# Remove authorized keys to meet marketplace requirements
+sudo rm -f /root/.ssh/authorized_keys /home/ubuntu/.ssh/authorized_keys
 sudo rm -f /root/.bash_history
 sudo rm -f /home/dolphinscheduler/.bash_history
 sudo rm -f /var/log/wtmp

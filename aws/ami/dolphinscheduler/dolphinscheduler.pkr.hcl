@@ -9,7 +9,7 @@ packer {
 
 variable "dolphinscheduler_version" {
   type    = string
-  default = "3.0.0-beta-2"
+  default = "3.0.1"
 }
 
 # Flag about whether print debug log during the building process
@@ -18,9 +18,10 @@ variable "debug" {
   default = "false"
 }
 
+# markplace only accept region in `us-east-1`, change it if you only need private AMI
 variable "region" {
   type    = string
-  default = "ap-southeast-1"
+  default = "us-east-1"
 }
 
 # t2.micro it is under the AWS free-tier
@@ -39,7 +40,8 @@ source "amazon-ebs" "dolphinscheduler" {
   region        = "${var.region}"
   source_ami_filter {
     filters = {
-      name                = "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*"
+      # latest base AMI to avoid CVE issue
+      name                = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
