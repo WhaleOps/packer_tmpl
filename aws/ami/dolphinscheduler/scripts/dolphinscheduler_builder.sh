@@ -77,9 +77,9 @@ sudo sed -i '1s|^|host  all  all  0.0.0.0/0  md5\n|' /etc/postgresql/*/main/pg_h
 
 # TODO using env variable
 # make system cost less of memory
-sudo sed -iE 's/(max-cpu-load-avg:) (.*?)/\1 1000/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
-sudo sed -iE 's/(reserved-memory:) (.*?)/\1 0.001/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
-sudo sed -iE 's/(exec-threads:) (.*?)/\1 5/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
+sudo sed -r -i 's/(max-cpu-load-avg:)(.*?)/\1 1000/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
+sudo sed -r -i 's/(reserved-memory:)(.*?)/\1 0.001/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
+sudo sed -r -i 's/(exec-threads:)(.*?)/\1 5/g' "${DOLPHINSCHEDULER_HOME}"/standalone-server/conf/application.yaml
 
 # Add systemd services
 sudo cp /tmp/zookeeper.service /lib/systemd/system/
@@ -110,7 +110,8 @@ sudo rm -rf /var/log/installer
 sudo rm -rf /var/lib/cloud/instances
 sudo rm -rf /tmp/* /var/tmp/* /tmp/.*-unix
 sudo find /var/cache -type f -delete
-sudo find /var/log -type f | while read f; do echo -n '' | sudo tee $f > /dev/null; done;
+# TODO Permission error: tee: /var/log/postgresql/postgresql-14-main.log
+# sudo find /var/log -type f | while read f; do echo -n '' | sudo tee $f > /dev/null; done;
 sudo find /var/lib/apt/lists -not -name lock -type f -delete
 sudo sync
 

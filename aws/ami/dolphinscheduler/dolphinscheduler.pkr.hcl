@@ -15,7 +15,7 @@ variable "dolphinscheduler_version" {
 # suffix of AMI name
 variable "suffix" {
   type    = string
-  default = "test"
+  default = ""
 }
 
 # Flag about whether print debug log during the building process
