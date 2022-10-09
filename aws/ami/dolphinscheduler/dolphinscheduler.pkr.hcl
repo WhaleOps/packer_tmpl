@@ -12,6 +12,12 @@ variable "dolphinscheduler_version" {
   default = "3.0.1"
 }
 
+# suffix of AMI name
+variable "suffix" {
+  type    = string
+  default = "test"
+}
+
 # Flag about whether print debug log during the building process
 variable "debug" {
   type    = string
@@ -35,7 +41,7 @@ locals {
 }
 
 source "amazon-ebs" "dolphinscheduler" {
-  ami_name      = "${local.ami_name}-V${var.dolphinscheduler_version}"
+  ami_name      = "${local.ami_name}-V${var.dolphinscheduler_version}${var.suffix}"
   instance_type = "${var.instance_type}"
   region        = "${var.region}"
   source_ami_filter {

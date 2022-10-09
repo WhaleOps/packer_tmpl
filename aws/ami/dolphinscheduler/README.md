@@ -141,6 +141,16 @@ For about how to use DolphinScheduler you view detail in [functions of DolphinSc
 
 The minimum required instance type to launch this AMI is **t2.micro**, and with this type you can start DolphinScheduler service and run some easy workflows, but the web UI may be a little stuck. The **t2.small** or instance type large than is be recommended if you want a better experience, an with that type you can run some middle scale workflow and have a smooth web UI experience. ref [AWS EC2 Instance Type][1]
 
+## Contributing
+
+### Turn On Debug Mode
+
+Turn on debug mode by changing variable `debug` value `default = "true"` in `dolphinscheduler.pkr.hcl`, debug mode will show more detail during the AMI build.
+
+### Add Suffix for AMI name
+
+AMI name must unique in each region, it could raise duplicate name error when you try build AMI with the name already exists. In this case, you and suffix for current build, change variable `suffix` when you want to add suffix to AMI. It is useful when you try to fix/add functional to exists packet template.
+
 ## REF
 
 * [AWS EC2 Instance Type][1]
