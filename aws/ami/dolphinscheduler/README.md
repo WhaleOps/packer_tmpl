@@ -145,7 +145,7 @@ The minimum required instance type to launch this AMI is **t2.micro**, and with 
 
 ### Turn On Debug Mode
 
-Turn on debug mode by changing variable `debug` value `default = "true"` in `dolphinscheduler.pkr.hcl`, debug mode will show more detail during the AMI build.
+Turn on debug mode by changing variable `pkr_debug` value `default = "true"` in `dolphinscheduler.pkr.hcl`, debug mode will show more detail during the AMI build.
 
 ### Add Suffix for AMI name
 

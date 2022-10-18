@@ -19,7 +19,7 @@ variable "suffix" {
 }
 
 # Flag about whether print debug log during the building process
-variable "debug" {
+variable "pkr_debug" {
   type    = string
   default = "false"
 }
@@ -96,7 +96,7 @@ build {
   provisioner "shell" {
     environment_vars = [
       "DOLPHINSCHEDULER_VERSION=${var.dolphinscheduler_version}",
-      "DEBUG=${var.debug}",
+      "PKR_DEBUG=${var.pkr_debug}",
     ]
     script = "scripts/dolphinscheduler_builder.sh"
   }
