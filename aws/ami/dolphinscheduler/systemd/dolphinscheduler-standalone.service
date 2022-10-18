@@ -4,6 +4,7 @@ After=syslog.target network.target
 
 [Service]
 Type=simple
+Environment='JAVA_OPTS=-server -Duser.timezone=${SPRING_JACKSON_TIME_ZONE} -Xms550m -Xmx950m -Xmn128m -XX:+PrintGCDetails -Xloggc:gc.log -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=dump.hprof'
 WorkingDirectory=/srv/dolphinscheduler/standalone-server
 ExecStart=/bin/bash bin/start.sh
 ExecStop=/bin/kill -15 $MAINPID
