@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "${DEBUG}" == "true" ]]; then
+if [[ "${PKR_DEBUG}" == "true" ]]; then
     set -euxo pipefail
 fi
 
