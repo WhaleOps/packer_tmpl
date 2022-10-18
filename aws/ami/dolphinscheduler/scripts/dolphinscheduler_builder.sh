@@ -8,7 +8,7 @@ unset HISTFILE
 history -cw
 
 echo "=== Export Setting ==="
-export ZOOKEEPER_VERSION=${ZOOKEEPER_VERSION:-3.6.3}
+export ZOOKEEPER_VERSION=${ZOOKEEPER_VERSION:-3.8.0}
 export ZOOKEEPER_HOME="/srv/zookeeper"
 export DOLPHINSCHEDULER_VERSION="${DOLPHINSCHEDULER_VERSION:-3.0.0-beta-2}"
 export DOLPHINSCHEDULER_HOME="/srv/dolphinscheduler"
@@ -37,9 +37,7 @@ sudo apt-get -qq update
 sudo apt-get -y -qq install --no-install-recommends \
     psmisc \
     openjdk-8-jdk \
-    postgresql \
-    postgresql-contrib \
-    postgresql-client
+    postgresql-14
 tar -xzf ${TMP_DIST_HOME}/apache-dolphinscheduler-"${DOLPHINSCHEDULER_VERSION}"-bin.tar.gz -C "${DOLPHINSCHEDULER_HOME}" --strip-components=1
 tar -xzf ${TMP_DIST_HOME}/apache-zookeeper-"${ZOOKEEPER_VERSION}"-bin.tar.gz -C "${ZOOKEEPER_HOME}" --strip-components=1
 sudo apt-get -y -qq --purge autoremove
