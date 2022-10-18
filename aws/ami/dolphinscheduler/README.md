@@ -2,9 +2,27 @@
 
 Build [Apache DolphinScheduler](https://github.com/apache/dolphinscheduler) AMI with [Packer](https://learn.hashicorp.com/packer)
 
+## Version Support
+
+| packer_tmpl | DolphinScheduler |
+| ------ | ------ |
+| 0.0.1 | 3.0.x |
+| 0.0.2 | 3.1.x |
+| latest | 3.1.x and above |
+
 ## How to Build It
 
 You can see more detail about how to build AMI in [AMI build](../../../README.md#how-to-build-with-packer)
+
+## What Does This AMI Contains
+
+This AMI contains all server need to setup DolphinScheduler, which including
+
+* DolphinScheduler: Main package of server, in path `/srv/dolphinscheduler`, will auto start standalone server when EC2 instance launch.
+  * Standalone server can be stop by command `sudo systemctl stop dolphinscheduler-standalone`
+  * Each server can be started by command `sudo systemctl disable [dolphinscheduler-master|dolphinscheduler-worker|dolphinscheduler-api|dolphinscheduler-alter]`
+* Zookeeper: Registration center, in path `/srv/zookeeper`, can be started by command `sudo systemctl start zookeeper`
+* PostgreSQL: Database, can be started by command `sudo systemctl start postgresql`
 
 ## How to Launch EC2 Instance from AMI
 

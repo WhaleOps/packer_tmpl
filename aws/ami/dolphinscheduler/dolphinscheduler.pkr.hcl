@@ -9,7 +9,7 @@ packer {
 
 variable "dolphinscheduler_version" {
   type    = string
-  default = "3.0.1"
+  default = "3.1.0"
 }
 
 # suffix of AMI name
