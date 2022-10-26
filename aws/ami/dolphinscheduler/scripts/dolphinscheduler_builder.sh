@@ -34,7 +34,10 @@ wget --directory-prefix=${TMP_DIST_HOME} https://dlcdn.apache.org/dolphinschedul
 
 echo "=== Install Dependence ==="
 sudo apt-get -qq update
+# cloud-utils and jq for AWS AMI or AWS marketplace, and others for dolphinscheduler
 sudo apt-get -y -qq install --no-install-recommends \
+    cloud-utils \
+    jq \
     psmisc \
     openjdk-8-jdk \
     postgresql-14
@@ -95,6 +98,10 @@ sudo systemctl disable dolphinscheduler-api
 sudo systemctl disable dolphinscheduler-master
 sudo systemctl disable dolphinscheduler-worker
 sudo systemctl enable dolphinscheduler-standalone
+
+echo "=== Configuration AMI Startup ==="
+chmod +x /home/ubuntu/chpwd.sh
+echo "@reboot bash -l /home/ubuntu/chpwd.sh" | crontab -
 
 echo "=== System Cleanup ==="
 # Remove authorized keys to meet marketplace requirements
