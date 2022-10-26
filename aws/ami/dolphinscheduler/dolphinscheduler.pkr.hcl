@@ -63,6 +63,7 @@ build {
     "source.amazon-ebs.dolphinscheduler"
   ]
 
+  # service config file
   provisioner "file" {
     source      = "systemd/zookeeper.service"
     destination = "/tmp/zookeeper.service"
@@ -91,6 +92,12 @@ build {
   provisioner "file" {
     source      = "systemd/dolphinscheduler-worker.service"
     destination = "/tmp/dolphinscheduler-worker.service"
+  }
+
+  # EC2 reboot startup, currently will change admin username and password
+  provisioner "file" {
+    source      = "scripts/chpwd.sh"
+    destination = "/home/ubuntu/chpwd.sh"
   }
 
   provisioner "shell" {
