@@ -49,8 +49,11 @@ you should choose the exist which you created in [New Security Group for Standal
 
 #### What Should I Do After EC2 Instance Launch
 
-After launch, you can login DolphinScheduler service with **admin/dolphinscheduler123** as default username/password via instance's **[Public-IPv4-address]:12345/dolphinscheduler/ui** or **[Public-IPv4-DNS]:12345/dolphinscheduler/ui**.
+After launch, you can login DolphinScheduler service with **user/<EC2_DYNAMIC_INSTANCE_ID>** as default username/password via instance's **[Public-IPv4-address]:12345/dolphinscheduler/ui** or **[Public-IPv4-DNS]:12345/dolphinscheduler/ui**.
 For about how to use DolphinScheduler you view detail in [functions of DolphinScheduler](https://dolphinscheduler.apache.org/en-us/docs/dev/user_doc/guide/homepage.html).
+
+> Note: The password of dolphinscheduler is dynamic, and it will be automatic change after EC2 instance launch to keep your service safe. And you can find it in your EC2 console home.
+> See [AMI container product](https://docs.aws.amazon.com/marketplace/latest/userguide/ami-container-product-usage-instructions.html) for more detail about AWS requests for AMI providers.
 
 </p></details>
 
@@ -150,8 +153,11 @@ It is will task some some time dependent on you network speed, and after it fini
 
 #### What Should I Do After Execute cluster.sh
 
-After that, you can login DolphinScheduler service with **admin/dolphinscheduler123** as default username/password via instance's **[API-SERVER-Public-IPv4-address]:12345/dolphinscheduler/ui** or **[API-SERVER-Public-IPv4-DNS]:12345/dolphinscheduler/ui**.
+After that, you can login DolphinScheduler service with **user/EC2_DYNAMIC_INSTANCE_ID** as default username/password via instance's **[API-SERVER-Public-IPv4-address]:12345/dolphinscheduler/ui** or **[API-SERVER-Public-IPv4-DNS]:12345/dolphinscheduler/ui**.
 For about how to use DolphinScheduler you view detail in [functions of DolphinScheduler](https://dolphinscheduler.apache.org/en-us/docs/dev/user_doc/guide/homepage.html).
+
+> Note: The password of dolphinscheduler is dynamic, and it will be automatic change after EC2 instance launch to keep your service safe. And you can find it in your EC2 console home.
+> See [AMI container product](https://docs.aws.amazon.com/marketplace/latest/userguide/ami-container-product-usage-instructions.html) for more detail about AWS requests for AMI providers.
 
 </p></details>
 
