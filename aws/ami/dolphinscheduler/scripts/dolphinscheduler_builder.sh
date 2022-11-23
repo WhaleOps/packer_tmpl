@@ -10,9 +10,11 @@ history -cw
 echo "=== Export Setting ==="
 export ZOOKEEPER_VERSION=${ZOOKEEPER_VERSION:-3.8.0}
 export ZOOKEEPER_HOME="/srv/zookeeper"
-export DOLPHINSCHEDULER_VERSION="${DOLPHINSCHEDULER_VERSION:-3.0.0-beta-2}"
+export DOLPHINSCHEDULER_VERSION="${DOLPHINSCHEDULER_VERSION:-3.1.0}"
 export DOLPHINSCHEDULER_HOME="/srv/dolphinscheduler"
 export TMP_DIST_HOME="/srv/dist"
+# Export JAVA_HOME to avoid executing the error during dolphinscheduler commanmd run
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 
 echo "=== Prepare ==="
 # TODO do not know how to change to default user currently
@@ -100,6 +102,7 @@ sudo systemctl disable dolphinscheduler-worker
 sudo systemctl enable dolphinscheduler-standalone
 
 echo "=== Configuration AMI Startup ==="
+echo "export JAVA_HOME=${JAVA_HOME}" >> ~/.bashrc
 chmod +x /home/ubuntu/chpwd.sh
 echo "@reboot bash -l /home/ubuntu/chpwd.sh" | crontab -
 

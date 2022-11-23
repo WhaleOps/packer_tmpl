@@ -8,6 +8,7 @@ Build [Apache DolphinScheduler](https://github.com/apache/dolphinscheduler) AMI 
 | ------ | ------ |
 | 0.0.1 | 3.0.x |
 | 0.0.2 | 3.1.x |
+| 0.0.3 | 3.0.x and 3.1.x, with AMI required password policies |
 | latest | 3.1.x and above |
 
 ## How to Build It
@@ -27,8 +28,6 @@ This AMI contains all server need to setup DolphinScheduler, which including
 ## How to Launch EC2 Instance from AMI
 
 > NOTE: The section [instance type requests](#launch-ami-instance-type-requests) show the minimum supported instance type of this AMI. And the **t2.micro** it is qualify under the [AWS free-tier][2], but if your account doesn't qualify under it, we're not responsible for any charges that you may incur
-
-<details><summary>Standalone Server/Quick Start</summary> <p>
 
 ### Standalone Server
 
@@ -54,10 +53,6 @@ For about how to use DolphinScheduler you view detail in [functions of DolphinSc
 
 > Note: The password of dolphinscheduler is dynamic, and it will be automatic change after EC2 instance launch to keep your service safe. And you can find it in your EC2 console home.
 > See [AMI container product](https://docs.aws.amazon.com/marketplace/latest/userguide/ami-container-product-usage-instructions.html) for more detail about AWS requests for AMI providers.
-
-</p></details>
-
-<details><summary>Cluster Server/Production</summary> <p>
 
 ### Cluster Server
 
@@ -158,8 +153,6 @@ For about how to use DolphinScheduler you view detail in [functions of DolphinSc
 
 > Note: The password of dolphinscheduler is dynamic, and it will be automatic change after EC2 instance launch to keep your service safe. And you can find it in your EC2 console home.
 > See [AMI container product](https://docs.aws.amazon.com/marketplace/latest/userguide/ami-container-product-usage-instructions.html) for more detail about AWS requests for AMI providers.
-
-</p></details>
 
 ## Launch AMI Instance Type Requests
 
